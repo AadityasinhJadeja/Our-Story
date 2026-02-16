@@ -273,14 +273,15 @@ const speech = {
 const motionState = {
   activeScreenTimer: null,
   chapterRefreshTimer: null,
-  transcriptSaveTimer: null
+  transcriptSaveTimer: null,
+  artifactRevealTimer: null
 };
 
 const generationState = {
   running: false
 };
 
-const GENERATION_TOTAL_MS = 2500;
+const GENERATION_TOTAL_MS = 1200;
 
 const GENERATION_STEPS = [
   {
@@ -293,19 +294,19 @@ const GENERATION_STEPS = [
     title: "Designing your narrative…",
     detail: "Extracting milestones and recurring themes.",
     progress: 46,
-    targetMs: 800
+    targetMs: 360
   },
   {
     title: "Verifying and polishing…",
     detail: "Tracing inside jokes, promises, and repair patterns.",
     progress: 74,
-    targetMs: 1600
+    targetMs: 720
   },
   {
     title: "Composing final artifact…",
     detail: "Building pages, timeline, and keepsakes.",
     progress: 96,
-    targetMs: 2300
+    targetMs: 1040
   }
 ];
 
@@ -1551,10 +1552,19 @@ function renderArtifact(model = buildArtifactModel()) {
     section.style.setProperty("--section-order", `${index}`);
   });
 
+  if (motionState.artifactRevealTimer) {
+    clearTimeout(motionState.artifactRevealTimer);
+    motionState.artifactRevealTimer = null;
+  }
+
   DOM.magazine.classList.remove("is-revealing");
   window.requestAnimationFrame(() => {
     DOM.magazine.classList.add("is-revealing");
   });
+  motionState.artifactRevealTimer = window.setTimeout(() => {
+    DOM.magazine.classList.remove("is-revealing");
+    motionState.artifactRevealTimer = null;
+  }, 700);
 
   showScreen("artifact");
   window.setTimeout(() => {
