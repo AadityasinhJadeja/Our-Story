@@ -1113,8 +1113,8 @@ h3,
 .magazine.is-revealing .mag-section {
   opacity: 0;
   transform: translateY(16px) scale(0.996);
-  animation: mag-section-rise 600ms var(--ease-silk) forwards;
-  animation-delay: calc(var(--section-order, 0) * 75ms);
+  animation: mag-section-rise 340ms var(--ease-silk) forwards;
+  animation-delay: calc(var(--section-order, 0) * 26ms);
 }
 
 @keyframes mag-section-rise {
@@ -3588,4 +3588,34 @@ body::after {
   margin: 0;
   color: #664458;
   line-height: 1.52;
+}
+
+/* Artifact scroll performance mode */
+body[data-screen="artifact"] .constellation-layer {
+  display: none !important;
+}
+
+body[data-screen="artifact"] .magazine {
+  box-shadow: 0 10px 18px rgba(156, 95, 126, 0.16);
+}
+
+body[data-screen="artifact"] .mag-section {
+  contain: paint;
+  box-shadow: none;
+}
+
+body[data-screen="artifact"] .motif-layer {
+  opacity: 0.09;
+  background-size: min(220px, 28vw);
+}
+
+body[data-screen="artifact"] .constellation-artifact .ambient-star,
+body[data-screen="artifact"] .constellation-artifact .const-nebula,
+body[data-screen="artifact"] .constellation-artifact .const-line,
+body[data-screen="artifact"] .constellation-artifact .const-node-ring,
+body[data-screen="artifact"] .constellation-artifact .const-node-core,
+body[data-screen="artifact"] .constellation-artifact .const-echo,
+body[data-screen="artifact"] .constellation-artifact .const-signal-arc {
+  animation: none !important;
+  filter: none !important;
 }

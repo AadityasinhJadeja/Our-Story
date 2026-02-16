@@ -272,7 +272,8 @@ const speech = {
 
 const motionState = {
   activeScreenTimer: null,
-  chapterRefreshTimer: null
+  chapterRefreshTimer: null,
+  transcriptSaveTimer: null
 };
 
 const generationState = {
@@ -284,30 +285,35 @@ const GENERATION_STEPS = [
     title: "Collecting your memories…",
     detail: "Preparing the first story draft.",
     progress: 18,
-    delay: 360
+    delay: 120
   },
   {
     title: "Designing your narrative…",
     detail: "Extracting milestones and recurring themes.",
     progress: 46,
-    delay: 420
+    delay: 130
   },
   {
     title: "Verifying and polishing…",
     detail: "Tracing inside jokes, promises, and repair patterns.",
     progress: 74,
-    delay: 480
+    delay: 140
   },
   {
     title: "Composing final artifact…",
     detail: "Building pages, timeline, and keepsakes.",
     progress: 96,
-    delay: 380
+    delay: 120
   }
 ];
 
+const dataUriCache = new Map();
+
 function toDataUri(svg) {
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+  if (dataUriCache.has(svg)) return dataUriCache.get(svg);
+  const uri = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+  dataUriCache.set(svg, uri);
+  return uri;
 }
 
 function escapeHtml(value) {
@@ -408,6 +414,7 @@ function showScreen(target) {
   }
 
   document.body.dataset.screen = target;
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 }
 
 function createSignalBurst(x, y, pieces = 8) {
@@ -662,6 +669,8 @@ function buildConstellationSvgMarkup({ responses, width, height, ambientCount = 
 function renderConstellationViews() {
   const responses = getLiveResponses();
   const litCount = responses.filter(Boolean).length;
+  const isLandingActive = DOM.screens.landing.classList.contains("active");
+  const isInterviewActive = DOM.screens.interview.classList.contains("active");
 
   if (DOM.heroConstellationStatus) {
     DOM.heroConstellationStatus.textContent = `${litCount} of ${CHAPTERS.length} chapters lit`;
@@ -672,27 +681,27 @@ function renderConstellationViews() {
       responses,
       width: 1440,
       height: 900,
-      ambientCount: 260,
+      ambientCount: 140,
       scope: "sky"
     });
   }
 
-  if (DOM.heroConstellation) {
+  if (DOM.heroConstellation && isLandingActive) {
     DOM.heroConstellation.innerHTML = buildConstellationSvgMarkup({
       responses,
       width: 740,
       height: 230,
-      ambientCount: 70,
+      ambientCount: 48,
       scope: "hero"
     });
   }
 
-  if (DOM.chapterConstellation) {
+  if (DOM.chapterConstellation && isInterviewActive) {
     DOM.chapterConstellation.innerHTML = buildConstellationSvgMarkup({
       responses,
       width: 760,
       height: 208,
-      ambientCount: 42,
+      ambientCount: 28,
       scope: "chapter",
       showLabels: true
     });
@@ -756,6 +765,7 @@ function wireConstellationMotion() {
   window.addEventListener(
     "pointermove",
     (event) => {
+      if (document.body.dataset.screen === "artifact") return;
       const px = clamp(event.clientX / Math.max(window.innerWidth, 1), 0, 1);
       const py = clamp(event.clientY / Math.max(window.innerHeight, 1), 0, 1);
       document.documentElement.style.setProperty("--pointer-x", px.toFixed(4));
@@ -1528,7 +1538,7 @@ function renderArtifact(model = buildArtifactModel()) {
       responses: model.responses,
       width: 920,
       height: 300,
-      ambientCount: 40,
+      ambientCount: 20,
       scope: "artifact",
       showLabels: true
     });
@@ -1557,6 +1567,12 @@ function sleep(ms) {
   });
 }
 
+function nextFrame() {
+  return new Promise((resolve) => {
+    window.requestAnimationFrame(() => resolve());
+  });
+}
+
 function setGenerationUiState(active) {
   const isActive = Boolean(active);
   generationState.running = isActive;
@@ -1581,7 +1597,6 @@ function updateGenerationStep(step) {
 async function createArtifactWithProgress() {
   if (generationState.running) return;
 
-  const model = buildArtifactModel();
   setGenerationUiState(true);
   updateGenerationStep({
     title: "Collecting your memories…",
@@ -1590,6 +1605,9 @@ async function createArtifactWithProgress() {
   });
 
   try {
+    await nextFrame();
+    const model = buildArtifactModel();
+
     for (const step of GENERATION_STEPS) {
       updateGenerationStep(step);
       await sleep(step.delay);
@@ -1601,7 +1619,7 @@ async function createArtifactWithProgress() {
       detail: "Your story is now ready to read and export.",
       progress: 100
     });
-    await sleep(260);
+    await sleep(90);
   } finally {
     setGenerationUiState(false);
   }
@@ -1685,10 +1703,22 @@ function wireEvents() {
   DOM.nextChapterBtn.addEventListener("click", moveToNextChapter);
 
   DOM.transcriptOutput.addEventListener("input", () => {
-    saveCurrentDraft();
+    if (motionState.transcriptSaveTimer) {
+      clearTimeout(motionState.transcriptSaveTimer);
+      motionState.transcriptSaveTimer = null;
+    }
+
+    motionState.transcriptSaveTimer = window.setTimeout(() => {
+      saveCurrentDraft();
+      motionState.transcriptSaveTimer = null;
+    }, 120);
   });
 
   DOM.transcriptOutput.addEventListener("blur", () => {
+    if (motionState.transcriptSaveTimer) {
+      clearTimeout(motionState.transcriptSaveTimer);
+      motionState.transcriptSaveTimer = null;
+    }
     saveCurrentDraft({ refreshChapterList: true });
   });
 
