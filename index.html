@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Story | Speak your memories. We design your story.</title>
+  <meta name="description"
+    content="A voice-first love story experience. Speak your memories and transform them into a cinematic digital artifact." />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSI+PGRlZnM+PHJhZGlhbEdyYWRpZW50IGlkPSJncmFkIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI1MCUiIGZ4PSIzMCUiIGZ5PSIzMCUiPjxzdG9wIG9mZnNldD0iMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmN2Q2ZGIiIC8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojYzQ1YzcyIiAvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xNiAyOEMxNiAyOCA0IDIxIDQgMTJDNCA3LjU4MTcyIDcuNTgxNzIgNCAxMiA0QzE0LjYwMjIgNCAxNiA2IDE2IDZDMTYgNiAxNy4zOTc4IDQgMjAgNEMyNC40MTgzIDQgMjggNy41ODE3MiAyOCAxMkMyOCAyMSAxNiAyOCAxNiAyOFoiIGZpbGw9InVybCgjZ3JhZCkiIC8+PHBhdGggZD0iTTE2IDI2QzE2IDI2IDYgMjAgNiAxMi41QzYgOS40NjI0MyA4LjQ2MjQzIDcgMTEuNSA3QzEzLjUgNyAxNC41IDguNSAxNiA5LjVDMTcuNSA4LjUgMTguNSA3IDIwLjUgN0MyMy41Mzc2IDcgMjYgOS40NjI0MyAyNiAxMi41QzI2IDIwIDE2IDI2IDE2IDI2WiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuNCIgc3Ryb2tlLXdpZHRoPSIxIiAvPjwvc3ZnPg==" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&family=Great+Vibes&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="constellation-layer" aria-hidden="true">
+    <div class="deep-grid"></div>
+    <div id="constellationSky" class="constellation-sky"></div>
+    <div id="loveDriftLayer" class="love-drift-layer"></div>
+    <div class="constellation-haze"></div>
+    <span class="comet comet-a"></span>
+    <span class="comet comet-b"></span>
+    <span class="comet comet-c"></span>
+  </div>
+  <a id="homeLogoLink" class="app-logo-link" href="#landing" aria-label="Go to home">
+    <img src="logo-mark.svg" alt="" width="24" height="24" />
+    <span>Our Story</span>
+  </a>
+
+  <main>
+    <section id="landing" class="screen active">
+      <header class="topbar">
+        <div class="brand">
+          <p class="brand-title">Our Story</p>
+          <p class="brand-subtitle">A love story told in your own words.</p>
+        </div>
+        <div class="topbar-right">
+          <p class="tagline">Dictate with Wispr Flow. We shape it into a keepsake.</p>
+        </div>
+      </header>
+
+      <div class="hero">
+        <p class="eyebrow">Voice signals in. Constellation story out.</p>
+        <h1>Every love has a Story</h1>
+        <p>Each chapter you dictate becomes a star node. Together they form a one-of-one relationship constellation.</p>
+        <button id="startStoryBtn" class="btn btn-primary">Start Dictating</button>
+      </div>
+
+      <section class="preview-grid" aria-label="Artifact Preview Sections">
+        <article class="preview-card">
+          <h3>Origin Star</h3>
+          <p>Your first meeting becomes the anchor node.</p>
+        </article>
+        <article class="preview-card">
+          <h3>Memory Orbit</h3>
+          <p>Core moments become high-energy constellations.</p>
+        </article>
+        <article class="preview-card">
+          <h3>Daily Signals</h3>
+          <p>Rituals and quirks draw micro-patterns.</p>
+        </article>
+        <article class="preview-card">
+          <h3>Repair Arc</h3>
+          <p>Hard chapters connect into growth lines.</p>
+        </article>
+        <article class="preview-card">
+          <h3>Private Codes</h3>
+          <p>Inside language adds hidden clusters.</p>
+        </article>
+        <article class="preview-card">
+          <h3>Promise Signal</h3>
+          <p>Your vow becomes the brightest marker.</p>
+        </article>
+        <article class="preview-card">
+          <h3>Skybook Artifact</h3>
+          <p>A cinematic keepsake built from your voice.</p>
+        </article>
+      </section>
+    </section>
+
+    <section id="interview" class="screen">
+      <header class="interview-header">
+        <button class="btn btn-ghost" id="backToLandingBtn">Back</button>
+        <div class="progress-wrap">
+          <p id="chapterCounter">Chapter 1 of 7</p>
+          <div class="progress-track" role="progressbar" aria-label="Story Progress">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+        <button class="btn btn-ghost" id="skipToArtifactBtn">Preview Artifact</button>
+      </header>
+
+      <div class="chapter-shell">
+        <aside class="chapter-list" id="chapterList" aria-label="Story Chapters"></aside>
+
+        <article class="chapter-card">
+          <p class="chapter-label" id="chapterLabel">Chapter 1</p>
+          <h2 id="chapterTitle">How We Met</h2>
+          <p id="chapterPrompt" class="chapter-prompt"></p>
+
+          <div class="transcript-wrap">
+            <p class="transcript-label">Wispr Flow Transcript</p>
+            <div id="transcriptOutput" class="transcript-output" contenteditable="true" spellcheck="false"
+              aria-live="polite" placeholder="Press your Wispr key and speak your memory..."></div>
+            <p class="dictation-hint">No manual typing needed. Dictate naturally, then continue.</p>
+            <p id="completionBadge" class="completion-badge hidden">Saved with love</p>
+          </div>
+
+          <div class="motif-preview">
+            <p>Visual motifs detected:</p>
+            <div id="motifChips" class="motif-chips">
+              <span class="motif-chip muted">None yet</span>
+            </div>
+          </div>
+
+          <section class="constellation-preview" aria-live="polite">
+            <div class="constellation-preview-head">
+              <p class="constellation-kicker">Voice Constellation</p>
+              <p>Your dictated chapters are turning into a live sky map.</p>
+            </div>
+            <div id="chapterConstellation" class="chapter-constellation" aria-label="Chapter constellation map"></div>
+          </section>
+
+          <footer class="chapter-actions">
+            <button id="autofillBtn" class="btn btn-secondary">Autofill Demo Dictation</button>
+            <button id="nextChapterBtn" class="btn btn-primary">Continue</button>
+          </footer>
+        </article>
+      </div>
+    </section>
+
+    <section id="artifact" class="screen">
+      <header class="artifact-header">
+        <button class="btn btn-ghost" id="editStoryBtn">Edit Story</button>
+        <div class="artifact-actions">
+          <button class="btn btn-secondary" id="pdfBtn">Download PDF</button>
+        </div>
+      </header>
+
+      <article id="magazine" class="magazine"></article>
+    </section>
+
+    <div id="generationOverlay" class="generation-overlay hidden" role="status" aria-live="polite" aria-atomic="true">
+      <div class="generation-card">
+        <p class="generation-kicker">Creating your artifact</p>
+        <h3 id="generationTitle">Collecting your memories…</h3>
+        <p id="generationStep" class="generation-step">Preparing the first story draft.</p>
+        <div class="generation-meter" aria-hidden="true">
+          <div id="generationMeterBar" class="generation-meter-bar"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <template id="chapterItemTemplate">
+    <button class="chapter-item" type="button">
+      <span class="chapter-item-index"></span>
+      <span class="chapter-item-title"></span>
+    </button>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
