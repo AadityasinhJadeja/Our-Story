@@ -280,30 +280,32 @@ const generationState = {
   running: false
 };
 
+const GENERATION_TOTAL_MS = 2500;
+
 const GENERATION_STEPS = [
   {
     title: "Collecting your memories…",
     detail: "Preparing the first story draft.",
     progress: 18,
-    delay: 120
+    targetMs: 0
   },
   {
     title: "Designing your narrative…",
     detail: "Extracting milestones and recurring themes.",
     progress: 46,
-    delay: 130
+    targetMs: 800
   },
   {
     title: "Verifying and polishing…",
     detail: "Tracing inside jokes, promises, and repair patterns.",
     progress: 74,
-    delay: 140
+    targetMs: 1600
   },
   {
     title: "Composing final artifact…",
     detail: "Building pages, timeline, and keepsakes.",
     progress: 96,
-    delay: 120
+    targetMs: 2300
   }
 ];
 
@@ -1573,6 +1575,14 @@ function nextFrame() {
   });
 }
 
+async function waitForGenerationTarget(startedAt, targetMs) {
+  const elapsed = performance.now() - startedAt;
+  const remaining = Math.max(0, targetMs - elapsed);
+  if (remaining) {
+    await sleep(remaining);
+  }
+}
+
 function setGenerationUiState(active) {
   const isActive = Boolean(active);
   generationState.running = isActive;
@@ -1598,19 +1608,16 @@ async function createArtifactWithProgress() {
   if (generationState.running) return;
 
   setGenerationUiState(true);
-  updateGenerationStep({
-    title: "Collecting your memories…",
-    detail: "Preparing the first story draft.",
-    progress: 0
-  });
+  const generationStartedAt = performance.now();
+  updateGenerationStep(GENERATION_STEPS[0]);
 
   try {
     await nextFrame();
     const model = buildArtifactModel();
 
-    for (const step of GENERATION_STEPS) {
+    for (const step of GENERATION_STEPS.slice(1)) {
+      await waitForGenerationTarget(generationStartedAt, step.targetMs);
       updateGenerationStep(step);
-      await sleep(step.delay);
     }
 
     renderArtifact(model);
@@ -1619,7 +1626,7 @@ async function createArtifactWithProgress() {
       detail: "Your story is now ready to read and export.",
       progress: 100
     });
-    await sleep(90);
+    await waitForGenerationTarget(generationStartedAt, GENERATION_TOTAL_MS);
   } finally {
     setGenerationUiState(false);
   }
